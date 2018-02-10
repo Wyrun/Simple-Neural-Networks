@@ -24,20 +24,19 @@ class neuron:
         self.previousValue = self.currentValue
         self.currentValue = theValue
         if self.ifGetSt:
-            self.currentValue = sigmoid(self.currentValue) + self.bias
+            self.currentValue = sigmoid(self.currentValue)
 
     def randMyWeights(self):
         for i in range(self.weightAmount):
             self.weights[i] = random.randint(0,1000)/500 - 1;
-    def randMyBias(self):
-        self.bias = random.randint(0,1000)/500 - 1;
 
 class NN:
-    def __init__(self, inputAmount, outputAmount, hiddenLayersAmount, neuronsOnEachLayer, ifInputsGetSt):
+    def __init__(self, inputAmount, outputAmount, hiddenLayersAmount, neuronsOnEachLayer, ifBiased = False,  ifInputsGetSt = True):
         self.inputAmount = inputAmount
         self.outputAmount = outputAmount
         self.hiddenLayersAmount = hiddenLayersAmount
         self.neuronsOnEachLayer = neuronsOnEachLayer
+        self.ifBiased = ifBiased
         self.inputs = []
         self.outputs = []
         self.hidden = []
@@ -86,16 +85,8 @@ class NN:
                 self.hidden[i][j].randMyWeights()
         return True
 
-    def randomizeTheBias(self):
-        for i in range(self.inputAmount):
-            self.inputs[i].randMyBias()
-        for i in range(self.hiddenLayersAmount):
-            for j in range(len(self.hidden[i])):
-                self.hidden[i][j].randMyBias()
-        return True
-
-MyNN = NN(2,1,1,2, True)
+MyNN = NN(2,1,1,2, True, True) # inputs, outputs, Hlayers, Hlayers' neurons, if biased, if input is activated
 MyNN.randomizeTheWeights()
-MyNN.randomizeTheBias()
+#MyNN.randomizeTheBias()
 
 print(MyNN.run([1, 0]))
