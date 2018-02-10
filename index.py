@@ -11,7 +11,8 @@ def sigmoid(x):
     return res
 
 class neuron:
-    def __init__(self, weightAmount, ifGetSt):
+    def __init__(self, weightAmount, ifGetSt, bias = 0):
+        self.bias = bias
         self.ifGetSt = ifGetSt
         self.weightAmount = weightAmount
         self.weights = []
@@ -23,10 +24,13 @@ class neuron:
         self.previousValue = self.currentValue
         self.currentValue = theValue
         if self.ifGetSt:
-            self.currentValue = sigmoid(self.currentValue)
+            self.currentValue = sigmoid(self.currentValue) + self.bias
 
     def randMyWeights(self):
-        self.weights = list(map(lambda : random.randint(0,1000)/500 - 1, self.weights))
+        for i in range(self.weightAmount):
+            self.weights[i] = random.randint(0,1000)/500 - 1;
+    def randMyBias(self):
+        self.bias = random.randint(0,1000)/500 - 1;
 
 class NN:
     def __init__(self, inputAmount, outputAmount, hiddenLayersAmount, neuronsOnEachLayer, ifInputsGetSt):
@@ -47,7 +51,7 @@ class NN:
                 self.hidden[i].append(neuron(self.neuronsOnEachLayer, True))
         self.hidden.append([])
         for j in range(self.neuronsOnEachLayer):
-            self.hidden[i].append(neuron(self.outputAmount, True))
+            self.hidden[self.hiddenLayersAmount - 1].append(neuron(self.outputAmount, True))
 
     def run(self, inputs):
         for i in range(self.inputAmount):
@@ -76,14 +80,22 @@ class NN:
 
     def randomizeTheWeights(self):
         for i in range(self.inputAmount):
-            self.inputs[i].randMyWeights
+            self.inputs[i].randMyWeights()
         for i in range(self.hiddenLayersAmount):
             for j in range(len(self.hidden[i])):
-                self.inputs[i].randMyWeights
+                self.hidden[i][j].randMyWeights()
         return True
-    def Learn(self, DataX, DataY):
 
-MyNN = NN(1,1,1,1, False)
+    def randomizeTheBias(self):
+        for i in range(self.inputAmount):
+            self.inputs[i].randMyBias()
+        for i in range(self.hiddenLayersAmount):
+            for j in range(len(self.hidden[i])):
+                self.hidden[i][j].randMyBias()
+        return True
+
+MyNN = NN(2,1,1,2, True)
 MyNN.randomizeTheWeights()
+MyNN.randomizeTheBias()
 
-print(MyNN.run([1]));
+print(MyNN.run([1, 0]))
